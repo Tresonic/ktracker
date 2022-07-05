@@ -3,9 +3,20 @@
 GET {{host}}/
 
 #### create user
-POST {{host}}/users
+POST {{host}}/create_user
 Content-Type: application/json
 
 {
-  "username": "testname"
+  "username": "testname",
+  "password": "asdf",
+  "email": "a@e.de"
+}
+
+#### auth user
+POST {{host}}/auth_user
+Content-Type: application/json
+
+{
+  "username": "testname",
+  "password": "asdf"
 }
