@@ -21,7 +21,8 @@ async fn main() {
         .route("/", get(root))
         // `POST /users` goes to `create_user`
         .route("/create_user", post(create_user)).layer(Extension(db.clone()))
-        .route("/auth_user", post(auth_user)).layer(Extension(db.clone()));
+        .route("/auth_user", post(auth_user)).layer(Extension(db.clone()))
+        .route("/get_meters_sum", post(get_meters_sum)).layer(Extension(db.clone()));
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`

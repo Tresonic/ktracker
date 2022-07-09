@@ -20,3 +20,12 @@ Content-Type: application/json
   "username": "testname",
   "password": "asdf"
 }
+
+
+#### meters_sum
+POST {{host}}/get_meters_sum
+Content-Type: application/json
+
+{
+  "username": "testname"
+}

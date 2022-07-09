@@ -48,3 +48,19 @@ pub async fn auth_user(
     StatusCode::UNAUTHORIZED
   }
 }
+
+#[derive(Serialize)]
+struct Sum {
+  pub sum: i32,
+}
+
+pub async fn get_meters_sum(
+  Json(payload): Json<IdUser>,
+  Extension(db): Extension<Database>,
+) -> impl IntoResponse {
+  let sum = Sum {
+    sum: db.get_meters_sum(&payload.username).await,
+  };
+
+  (StatusCode::OK, Json(sum))
+}

@@ -38,6 +38,23 @@ impl Database {
     VALUES (?, ?, ?)").bind(user.username).bind(user.email).bind(hash)
     .execute(&self.conn).await.unwrap();
   }
+
+  pub async fn get_meters_sum(self, username: &str) -> i32 {
+    let meters_vec = sqlx::query_as::<_, MeterData>("SELECT meters FROM data WHERE username = ?").bind(username).fetch_all(&self.conn).await.unwrap_or(Vec::new());
+    // if meters_vec.is_empty(){ return 0;}
+
+    let mut sum = 0;
+    for d in meters_vec {
+      sum += d.meters;
+    }
+
+    return sum;
+  }
+}
+
+#[derive(sqlx::FromRow)]
+struct MeterData {
+  id: i32, user_id: i32, time: String, meters: i32,
 }
 
 pub async fn init_db() -> Database {
@@ -49,6 +66,21 @@ pub async fn init_db() -> Database {
     email             TEXT NOT NULL,
     hash              TEXT NOT NULL
     )").execute(&con).await.unwrap();
+
+  sqlx::query("CREATE TABLE IF NOT EXISTS data (
+    id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL,
+    time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    meters UNSIGNED BIG INT NOT NULL,
+    FOREIGN KEY(username) REFERENCES users(username)
+    )").execute(&con).await.unwrap();
+
+    let username = "testname";
+    let meters = 10;
+    
+    sqlx::query("INSERT INTO data
+    (username, meters)
+    VALUES (?, ?)").bind(username).bind(meters).execute(&con).await.unwrap();
   
   Database { conn: con }
 }

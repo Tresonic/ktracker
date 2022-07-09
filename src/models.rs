@@ -14,6 +14,11 @@ pub struct AuthUser {
     pub password: String,
 }
 
+#[derive(Deserialize)]
+pub struct IdUser {
+    pub username: String,
+}
+
 // the output to our `create_user` handler
 #[derive(Serialize)]
 pub struct User {
